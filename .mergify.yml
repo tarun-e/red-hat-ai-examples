@@ -1,0 +1,143 @@
+queue_rules:
+  - name: default
+    queue_conditions:
+      - check-success=linting-and-formatting
+      - check-success=secret-scanning
+    merge_conditions:
+      - check-success=linting-and-formatting
+      - check-success=secret-scanning
+    batch_size: 3
+    batch_max_wait_time: 10min
+    priority: medium
+
+pull_request_rules:
+  # Auto-merge Dependabot patch and minor updates
+  - name: Automatic merge for Dependabot patch and minor updates
+    conditions:
+      - author=dependabot[bot]
+      - check-success=linting-and-formatting
+      - check-success=secret-scanning
+      - or:
+        - title~=^chore\(deps\): bump .+ from .+ to .+\..+\.
+        - and:
+          - title~=^chore\(deps\): bump
+          - -title~=major
+    actions:
+      queue:
+        name: default
+        priority: low
+        method: squash
+        commit_message_template: |
+          {{ title }} (#{{ number }})
+
+          {{ body }}
+      label:
+        add:
+          - auto-merge
+
+  # Require manual approval for Dependabot major updates
+  - name: Require approval for Dependabot major updates
+    conditions:
+      - author=dependabot[bot]
+      - or:
+        - title~=major
+        - title~=^chore\(deps\): bump .+ from \d+\.\d+\.\d+ to \d+\.
+      - "#approved-reviews-by>=1"
+      - check-success=linting-and-formatting
+      - check-success=secret-scanning
+    actions:
+      queue:
+        name: default
+        priority: medium
+        method: squash
+        commit_message_template: |
+          {{ title }} (#{{ number }})
+
+          {{ body }}
+      label:
+        add:
+          - major-update
+          - approved
+
+  # Regular PRs require approval
+  - name: Merge approved PRs from contributors
+    conditions:
+      - -author=dependabot[bot]
+      - "#approved-reviews-by>=1"
+      - check-success=linting-and-formatting
+      - check-success=secret-scanning
+      - -draft
+      - label!=do-not-merge
+    actions:
+      queue:
+        name: default
+        priority: medium
+        method: squash
+        commit_message_template: |
+          {{ title }} (#{{ number }})
+
+          {{ body }}
+
+  # Label PRs based on files changed
+  - name: Auto-label Python changes
+    conditions:
+      - files~=\.py$
+    actions:
+      label:
+        add:
+          - python
+
+  - name: Auto-label CI/CD changes
+    conditions:
+      - files~=^\.github/workflows/
+    actions:
+      label:
+        add:
+          - ci-cd
+
+  # Notify on conflicts
+  - name: Notify author on merge conflicts
+    conditions:
+      - conflict
+    actions:
+      comment:
+        message: |
+          This pull request has merge conflicts that must be resolved before it can be merged.
+
+          Please rebase your branch on the latest `main` branch and resolve the conflicts.
+      label:
+        add:
+          - needs-rebase
+
+  # Remove needs-rebase label when conflicts are resolved
+  - name: Remove needs-rebase label when conflicts resolved
+    conditions:
+      - -conflict
+      - label=needs-rebase
+    actions:
+      label:
+        remove:
+          - needs-rebase
+
+  # Warn on large PRs
+  - name: Warn on large PRs
+    conditions:
+      - files>20
+    actions:
+      comment:
+        message: |
+          ⚠️ This PR modifies more than 20 files. Consider breaking it into smaller, more focused PRs for easier review.
+      label:
+        add:
+          - large-pr
+
+  # Auto-request reviews for non-Dependabot PRs
+  - name: Auto-request reviews
+    conditions:
+      - -author=dependabot[bot]
+      - -draft
+      - "#approved-reviews-by<1"
+    actions:
+      request_reviews:
+        teams:
+          - "@red-hat-data-services/maintainers"
