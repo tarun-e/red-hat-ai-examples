@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import kfp
 from kfp import dsl, kubernetes
@@ -106,9 +106,9 @@ def eval_model(
         "max_model_len": 4096,
         "gpu_memory_utilization": 0.8,
     },
-    limit: Optional[int] = None,
+    limit: int | None = None,
     num_fewshot: int = 5,
-    batch_size: Optional[int] = None,
+    batch_size: int | None = None,
 ) -> str:
     import lm_eval
     from lm_eval.utils import make_table
