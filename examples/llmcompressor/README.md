@@ -1,9 +1,6 @@
 # Model Compression and Evaluation on Red Hat OpenShift AI (RHOAI)
 
-The compression and optimization of pretrained, off-the-shelf large language models (LLMs) is essential for
-organizations to reduce the hardware and energy requirements of their AI applications. This set of examples
-will introduce RHOAI users (Machine Learning Engineers and Data Scientists) to model compression using two
-tools in the open-source VLLM project:
+The compression and optimization of pretrained, off-the-shelf large language models (LLMs) is essential for organizations to reduce the hardware and energy requirements of their AI applications. This set of examples will introduce RHOAI users (Machine Learning Engineers and Data Scientists) to model compression using two tools in the open-source VLLM project:
 
 1. [`llm-compressor`](https://github.com/vllm-project/llm-compressor) to compress models.
 2. The [`vllm`](https://github.com/vllm-project/vllm) deployment engine to evaluate the performance of compressed models.
@@ -16,7 +13,7 @@ how to run and compare the performance of different compression techniques, and 
 or pretrained model.
 
 > [!NOTE]
-> We also publish compressed versions of popular LLMs to HuggingFace that can be downloaded directly at <https://huggingface.co/RedHatAI>
+> We also publish compressed versions of popular LLMs to HuggingFace that can be downloaded directly at https://huggingface.co/RedHatAI
 
 ## Contents
 
@@ -76,7 +73,7 @@ requires accelerated hardware. The examples demonstrate both, and the images are
 GPUs with [compute capability](https://developer.nvidia.com/cuda-gpus) 7.0 or higher.
 
 > [!NOTE]
-> Certain features in `vllm` require higher compute capability -- <https://docs.vllm.ai/en/stable/features/compatibility_matrix.html>
+> Certain features in `vllm` require higher compute capability -- https://docs.vllm.ai/en/stable/features/compatibility_matrix.html
 
 As a best practice, RHOAI clusters configure GPU nodes with
 [taints](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) so that tasks that don't
@@ -93,5 +90,4 @@ kubernetes.add_toleration(
 )
 ```
 
-Users may have to update this to match the taint configured by the cluster administrator, or remove if the taint does
-not exist.
+Users may have to update this to match the taint configured by the cluster administrator, or remove if the taint does not exist.

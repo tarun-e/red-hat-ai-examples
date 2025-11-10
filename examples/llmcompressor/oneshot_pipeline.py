@@ -7,15 +7,11 @@ from kfp import dsl, kubernetes
 @kfp.dsl.component(
     base_image="quay.io/opendatahub/llmcompressor-pipeline-runtime:main",
 )
-def run_oneshot_datafree(
-    model_id: str, recipe: str, output_model: dsl.Output[dsl.Artifact]
-):
+def run_oneshot_datafree(model_id: str, recipe: str, output_model: dsl.Output[dsl.Artifact]):
     from llmcompressor import oneshot
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id, device_map="auto", torch_dtype="auto"
-    )
+    model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype="auto")
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
     model = oneshot(model=model, recipe=recipe, tokenizer=tokenizer)
