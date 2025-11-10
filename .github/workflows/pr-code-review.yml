@@ -1,0 +1,205 @@
+name: PR Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
+jobs:
+  reviewdog:
+    name: Reviewdog - Inline PR Comments
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      # Ruff - Fast Python linter with inline comments
+      - name: Run Ruff with reviewdog
+        uses: reviewdog/action-ruff@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          filter_mode: nofilter
+          fail_on_error: false
+
+      # MyPy - Type checking with inline comments
+      - name: Run MyPy with reviewdog
+        uses: tsuyoshicho/action-mypy@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          fail_on_error: false
+
+      # Flake8 - Additional linting with inline comments
+      - name: Run Flake8 with reviewdog
+        uses: reviewdog/action-flake8@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          fail_on_error: false
+          flake8_args: '--max-line-length=100 --extend-ignore=E203,W503'
+
+      # Black - Code formatting check with inline comments
+      - name: Run Black with reviewdog
+        uses: reviewdog/action-black@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          fail_on_error: false
+
+      # Bandit - Security check with inline comments
+      - name: Run Bandit with reviewdog
+        uses: reviewdog/action-bandit@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          fail_on_error: false
+
+      # Shellcheck - For any shell scripts
+      - name: Run Shellcheck with reviewdog
+        uses: reviewdog/action-shellcheck@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: warning
+          fail_on_error: false
+          pattern: '*.sh'
+
+  pr-summary:
+    name: PR Quality Summary
+    runs-on: ubuntu-latest
+    needs: reviewdog
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run all checks and generate report
+        id: quality_report
+        run: |
+          echo "## Code Quality Report" > report.md
+          echo "" >> report.md
+
+          # Black check
+          echo "### 🎨 Code Formatting (Black)" >> report.md
+          if black --check --line-length=100 . > /dev/null 2>&1; then
+            echo "✅ All Python files are properly formatted" >> report.md
+          else
+            echo "❌ Some files need formatting. Run \`black .\` to fix." >> report.md
+            echo "\`\`\`" >> report.md
+            black --check --line-length=100 --diff . 2>&1 | head -50 >> report.md
+            echo "\`\`\`" >> report.md
+          fi
+          echo "" >> report.md
+
+          # Ruff check
+          echo "### 🔍 Linting (Ruff)" >> report.md
+          if ruff check . > /dev/null 2>&1; then
+            echo "✅ No linting issues found" >> report.md
+          else
+            echo "❌ Linting issues detected:" >> report.md
+            echo "\`\`\`" >> report.md
+            ruff check . 2>&1 | head -50 >> report.md
+            echo "\`\`\`" >> report.md
+          fi
+          echo "" >> report.md
+
+          # Notebook checks
+          echo "### 📓 Jupyter Notebooks" >> report.md
+          NOTEBOOKS=$(find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | wc -l)
+          echo "Found $NOTEBOOKS notebook(s)" >> report.md
+          if nbqa ruff . > /dev/null 2>&1; then
+            echo "✅ All notebooks pass linting" >> report.md
+          else
+            echo "⚠️ Some notebooks have linting issues" >> report.md
+          fi
+          echo "" >> report.md
+
+          # Security check
+          echo "### 🔒 Security (Bandit)" >> report.md
+          if bandit -r . -c pyproject.toml > /dev/null 2>&1; then
+            echo "✅ No security issues detected" >> report.md
+          else
+            echo "⚠️ Potential security issues found. Review Bandit output." >> report.md
+          fi
+          echo "" >> report.md
+
+          echo "---" >> report.md
+          echo "*This report was automatically generated by the CI pipeline*" >> report.md
+
+      - name: Comment PR with summary
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('report.md', 'utf8');
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Code Quality Report')
+            );
+
+            const commentBody = report;
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }

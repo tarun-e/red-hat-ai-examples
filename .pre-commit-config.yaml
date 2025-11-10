@@ -1,0 +1,90 @@
+# Pre-commit hooks for code quality checks
+# Install: pip install pre-commit
+# Setup: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # General file formatting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        args: ['--maxkb=10000']
+        name: Check for large files
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: debug-statements
+        name: Check for debug statements
+
+  # Python code formatting with black
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        name: Format Python code with black
+        language_version: python3
+        args: ['--line-length=100']
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: Sort Python imports
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Python linting with ruff (faster alternative to flake8, pylint)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.2.1
+    hooks:
+      - id: ruff
+        name: Lint Python code with ruff
+        args: ['--fix', '--exit-non-zero-on-fix']
+      - id: ruff-format
+        name: Format Python code with ruff
+
+  # Jupyter notebook cleaning and formatting
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      - id: nbqa-black
+        name: Format notebooks with black
+        args: ['--line-length=100']
+      - id: nbqa-isort
+        name: Sort imports in notebooks
+        args: ['--profile=black', '--line-length=100']
+      - id: nbqa-ruff
+        name: Lint notebooks with ruff
+        args: ['--fix', '--ignore=E402,E501']
+
+  # Clear notebook outputs before committing
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        name: Strip notebook outputs
+
+  # Type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: Type check Python code
+        args: ['--ignore-missing-imports', '--no-strict-optional', '--allow-untyped-defs']
+        exclude: ^(tests/|examples/)
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        name: Security check with bandit
+        args: ['-c', 'pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
+        exclude: ^tests/

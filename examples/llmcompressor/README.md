@@ -1,13 +1,13 @@
 # Model Compression and Evaluation on Red Hat OpenShift AI (RHOAI)
 
-The compression and optimization of pretrained, off-the-shelf large language models (LLMs) is essential for organizations to reduce the hardware and energy requirements of their AI applications. This set of examples will introduce RHOAI users (Machine Learning Engineers and Data Scientists) to model compression using two tools in the open-source VLLM project: 
+The compression and optimization of pretrained, off-the-shelf large language models (LLMs) is essential for organizations to reduce the hardware and energy requirements of their AI applications. This set of examples will introduce RHOAI users (Machine Learning Engineers and Data Scientists) to model compression using two tools in the open-source VLLM project:
 
 1. [`llm-compressor`](https://github.com/vllm-project/llm-compressor) to compress models.
-2. The [`vllm`](https://github.com/vllm-project/vllm) deployment engine to evaluate the performance of compressed models. 
+2. The [`vllm`](https://github.com/vllm-project/vllm) deployment engine to evaluate the performance of compressed models.
 
 While research in model compression is continually evolving and growing increasingly complex, the examples require only a basic understanding of Python and the [HuggingFace software ecosystem](https://huggingface.co/docs/transformers/index). By the end, users should know how to run and compare the performance of different compression techniques, and how to customize to their own dataset or pretrained model.
 
-> [!NOTE]  
+> [!NOTE]
 > We also publish compressed versions of popular LLMs to HuggingFace that can be downloaded directly at https://huggingface.co/RedHatAI
 
 ## Contents
@@ -55,7 +55,7 @@ kubernetes.use_secret_as_env(
 
 Data-free compression flows can typically run in a short amount of time on CPU, but calibrated compression often requires accelerated hardware. The examples demonstrate both, and the images are built to be compatible with NVIDIA GPUs with [compute capability](https://developer.nvidia.com/cuda-gpus) 7.0 or higher.
 
-> [!NOTE]  
+> [!NOTE]
 > Certain features in `vllm` require higher compute capability -- https://docs.vllm.ai/en/stable/features/compatibility_matrix.html
 
 As a best practice, RHOAI clusters configure GPU nodes with [taints](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) so that tasks that don't require GPUs are not generally deployed to them. The pipeline example assumes cluster nodes with NVIDIA A10 devices are also configured with a taint `NVIDIA-A10G-SHARED`. To ensure the task is deployed to that node, we add a toleration:

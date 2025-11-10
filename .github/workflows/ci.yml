@@ -1,0 +1,197 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Black (Python formatter)
+        id: black
+        run: |
+          black --check --line-length=100 --diff . || echo "black_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Run isort (Import sorter)
+        id: isort
+        run: |
+          isort --check-only --profile black --line-length 100 --diff . || echo "isort_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Run Ruff (Linter)
+        id: ruff
+        run: |
+          ruff check --output-format=github . || echo "ruff_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Run nbQA - Black on notebooks
+        id: nbqa-black
+        run: |
+          nbqa black --check --line-length=100 --nbqa-diff . || echo "nbqa_black_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Run nbQA - Ruff on notebooks
+        id: nbqa-ruff
+        run: |
+          nbqa ruff --output-format=github . || echo "nbqa_ruff_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Check notebook outputs are stripped
+        id: nbstripout
+        run: |
+          nbstripout --dry-run **/*.ipynb || echo "nbstripout_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Type checking with mypy
+        id: mypy
+        run: |
+          mypy --ignore-missing-imports --no-strict-optional --allow-untyped-defs . || echo "mypy_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Security check with Bandit
+        id: bandit
+        run: |
+          bandit -r . -c pyproject.toml -f json -o bandit-report.json || echo "bandit_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Upload Bandit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+          retention-days: 30
+
+      - name: Fail if any checks failed
+        if: |
+          steps.black.outputs.black_failed == 'true' ||
+          steps.isort.outputs.isort_failed == 'true' ||
+          steps.ruff.outputs.ruff_failed == 'true' ||
+          steps.nbqa-black.outputs.nbqa_black_failed == 'true' ||
+          steps.nbqa-ruff.outputs.nbqa_ruff_failed == 'true' ||
+          steps.nbstripout.outputs.nbstripout_failed == 'true' ||
+          steps.mypy.outputs.mypy_failed == 'true' ||
+          steps.bandit.outputs.bandit_failed == 'true'
+        run: |
+          echo "One or more code quality checks failed"
+          exit 1
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          # Install project-specific requirements if they exist
+          if [ -f examples/llmcompressor/requirements.txt ]; then
+            pip install -r examples/llmcompressor/requirements.txt
+          fi
+
+      - name: Run pytest
+        run: |
+          pytest --cov=. --cov-report=xml --cov-report=term-missing
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  notebook-validation:
+    name: Validate Jupyter Notebooks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install nbconvert nbformat jupyter
+
+      - name: Check notebook syntax
+        run: |
+          find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | while read notebook; do
+            echo "Validating $notebook"
+            jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 "$notebook" || echo "::warning file=$notebook::Notebook execution failed"
+          done
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Safety
+        run: |
+          python -m pip install --upgrade pip
+          pip install safety
+
+      - name: Check dependencies for vulnerabilities
+        run: |
+          # Check all requirements files
+          find . -name "requirements*.txt" -not -path "*/.venv/*" | while read req_file; do
+            echo "Checking $req_file"
+            safety check -r "$req_file" --output text || true
+          done
+        continue-on-error: true
