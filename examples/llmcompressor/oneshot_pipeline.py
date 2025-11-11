@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import kfp
 from kfp import dsl, kubernetes
@@ -10,9 +10,8 @@ from kfp import dsl, kubernetes
 def run_oneshot_datafree(
     model_id: str, recipe: str, output_model: dsl.Output[dsl.Artifact]
 ):
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
     from llmcompressor import oneshot
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     model = AutoModelForCausalLM.from_pretrained(
         model_id, device_map="auto", torch_dtype="auto"
@@ -41,8 +40,8 @@ def run_oneshot_calibrated(
     seed: int = 42,
 ):
     from datasets import load_dataset
-    from transformers import AutoTokenizer, AutoModelForCausalLM
     from llmcompressor import oneshot
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     # Load dataset.
     ds = load_dataset(dataset_id, split=dataset_split)
@@ -107,9 +106,9 @@ def eval_model(
         "max_model_len": 4096,
         "gpu_memory_utilization": 0.8,
     },
-    limit: Optional[int] = None,
+    limit: int | None = None,
     num_fewshot: int = 5,
-    batch_size: Optional[int] = None,
+    batch_size: int | None = None,
 ) -> str:
     import lm_eval
     from lm_eval.utils import make_table
