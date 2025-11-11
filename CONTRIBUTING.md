@@ -58,6 +58,9 @@ You can also run these tools manually:
 # Python linting
 ruff check .
 
+# Fix Python linting
+ruff check --fix .
+
 # Python formatting
 ruff format .
 

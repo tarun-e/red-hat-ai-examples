@@ -1,6 +1,7 @@
 # Domain Customization Data Generation using Kubeflow Pipelines (KFP)
 
-This example demonstrates how to generate synthetic data for domain-specific model customization using **Kubeflow Pipelines (KFP)** on a **Red Hat OpenShift AI (RHOAI)** instance.
+This example demonstrates how to generate synthetic data for domain-specific model customization using
+**Kubeflow Pipelines (KFP)** on a **Red Hat OpenShift AI (RHOAI)** instance.
 
 ---
 
