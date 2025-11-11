@@ -1,0 +1,40 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # Python dependencies - Root
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      root-dependencies:
+        patterns:
+          - "*"
+
+  # Python dependencies - llmcompressor example
+  - package-ecosystem: "pip"
+    directory: "/examples/llmcompressor"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+      - "examples"
+    groups:
+      llmcompressor-dependencies:
+        patterns:
+          - "*"
