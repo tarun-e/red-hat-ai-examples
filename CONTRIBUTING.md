@@ -85,8 +85,11 @@ ruff check --fix .
 # Python formatting
 ruff format .
 
-# Markdown linting (if installed)
+# Markdown linting
 markdownlint .
+
+# Fix Markdown lint
+markdownlint --fix .
 
 # Run all pre-commit hooks
 pre-commit run --all-files

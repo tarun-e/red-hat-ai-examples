@@ -11,6 +11,7 @@
     "style": "ordered"
   },
   "MD040": true,
+  "MD045": false,
   "MD046": {
     "style": "fenced"
   }
