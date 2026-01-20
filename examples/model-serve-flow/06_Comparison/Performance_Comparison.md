@@ -1,6 +1,6 @@
-## Goal
+# Performance Comparison of the Compressed and Base Models
 
-This document will compare the system level performance of the compressed and base models.
+Following is a comparison of the system-level performance of the compressed and base models.
 
 ## Hardware
 

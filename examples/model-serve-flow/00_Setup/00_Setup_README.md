@@ -3,14 +3,14 @@
 ## Navigation
 
 - [Model Serving Overview](../README.md)
-- Step 0: 00_Setup
-- [Step 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/01_Base_Accuracy_Benchmarking_README.md)
-- [Step 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
-- [Step 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
-- [Step 4: Base Accuracy Benchmarking](../04_Compressed_Accuracy_Benchmarking/04_Compressed_Accuracy_Benchmarking_README.md)
-- [Step 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
-- [Step 6: Comparison](../06_Comparison)
-- [Step 7: Model Deployment](../07_Deployment)
+- Module 0: 00_Setup
+- [Module 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/01_Base_Accuracy_Benchmarking_README.md)
+- [Module 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
+- [Module 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
+- [Module 4: Base Accuracy Benchmarking](../04_Compressed_Accuracy_Benchmarking/04_Compressed_Accuracy_Benchmarking_README.md)
+- [Module 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
+- [Module 6: Comparison](../06_Comparison/06_Comparison_README.md)
+- [Module 7: Model Deployment](../07_Deployment)
 
 ## Set up your working environment
 
@@ -31,9 +31,7 @@ Ask your OpenShift cluster administrator to configure your cluster as follows:
 
 ## Create a project
 
-To implement an AI workflow in OpenShift AI, you must create a project. Projects help your team to organize and work
-together on resources within separated namespaces. From a project you can create many workbenches, each with their own
-IDE environment (for example, JupyterLab), and each with their own connections and cluster storage.
+To implement an AI workflow in OpenShift AI, you must create a project. Projects help your team to organize and work together on resources within separated namespaces. From a project you can create many workbenches, each with their own IDE environment (for example, JupyterLab), and each with their own connections and cluster storage.
 
 ### Prerequisites
 
@@ -138,4 +136,4 @@ README files provide details about each step in the model serve workflow.
 
 ## Next step
 
-Proceed to [Step 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/).
+Proceed to [Module 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/).

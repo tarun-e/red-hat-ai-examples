@@ -1,4 +1,4 @@
-## Performance Benchmarking Using GuideLLM
+## Performance Benchmarking with GuideLLM
 
 Performance benchmarking is the process of evaluating how efficiently a model performs under real-world conditions. Unlike accuracy evaluation, which focuses on the quality of predictions, performance benchmarking measures system-level metrics such as inference speed, latency, concurrency handling, and throughput. These metrics are critical for deploying large language models (LLMs) in production environments, where high demand and resource constraints can impact the user experience.
 

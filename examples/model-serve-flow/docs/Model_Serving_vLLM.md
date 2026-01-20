@@ -6,6 +6,17 @@ vLLM is a high-performance inference engine specifically designed for large lang
 
 We use vLLM to launch inference servers for both the base model and the compressed model so that we can benchmark their performance under real-world serving conditions. By comparing metrics such as token throughput, latency, and concurrency handling, we can evaluate the benefits of model compression without affecting accuracy.
 
+Key Settings for Production Optimization:
+
+--max-num-seqs – Sets maximum concurrent requests to optimize throughput via continuous batching
+
+--enable-chunked-prefill – Reduces GPU memory usage by splitting long prompts (prefills) into manageable chunks
+
+--enable-prefix-caching – Reuses previously computed Key-Value (KV) caches for faster decoding of repeated or shared prompts
+
+--gpu-memory-utilization – Explicitly manages the percentage of GPU memory used for KV caching
+
+
 ### vLLM Configuration for Single-Node and Multi-Node Serving
 
 For single-node, single-GPU or multi-GPU (but not multi-node) vLLM serving, the main arguments are:

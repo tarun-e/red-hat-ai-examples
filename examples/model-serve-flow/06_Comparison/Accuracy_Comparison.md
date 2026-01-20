@@ -1,6 +1,6 @@
-## Goal
+# Accuracy Comparison of the Compressed and Base Models
 
-This document will compare the accuracy of the compressed and base models. Once the model is quantized/compressed, there is some level of quantization error introduced. It is important to evaluate the model's accuracy to ensure it performs well on standard benchmark tasks.
+Following is a comparison of the accuracy of the compressed and base models.
 
 ## Hardware
 

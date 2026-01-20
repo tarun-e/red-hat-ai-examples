@@ -1,4 +1,4 @@
-## Compress a Large Language Model using LLM Compressor
+## Compress a Large Language Model by using LLM Compressor
 
 Model Compression is a technique that reduces the size and computational requirements of large language models (LLMs) while maintaining their performance as much as possible. It is especially important in production environments, where deploying full-scale models can be costly in terms of memory, latency, and infrastructure resources. Compressed models enable faster inference, lower GPU usage, and scalability for real-time applications.
 

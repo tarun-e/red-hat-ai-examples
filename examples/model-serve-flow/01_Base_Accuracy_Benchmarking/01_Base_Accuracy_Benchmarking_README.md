@@ -1,36 +1,38 @@
-# Step 1: Evaluating Accuracy of Base Model
+# Module 1: Base Accuracy Benchmarking
 
 ## Navigation
 
 - [Model Serving Overview](../README.md)
-- [Step 0: 00_Setup](../00_Setup/00_Setup_README.md)
-- Step 1: Base Accuracy Benchmarking
-- [Step 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
-- [Step 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
-- [Step 4: Base Accuracy Benchmarking](../04_Compressed_Accuracy_Benchmarking/04_Compressed_Accuracy_Benchmarking_README.md)
-- [Step 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
-- [Step 6: Comparison](../06_Comparison)
-- [Step 7: Model Deployment](../07_Deployment)
+- [Module 0: 00_Setup](../00_Setup/00_Setup_README.md)
+- Module 1: Base Accuracy Benchmarking
+- [Module 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
+- [Module 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
+- [Module 4: Base Accuracy Benchmarking](../04_Compressed_Accuracy_Benchmarking/04_Compressed_Accuracy_Benchmarking_README.md)
+- [Module 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
+- [Module 6: Comparison](../06_Comparison/06_Comparison_README.md)
+- [Module 7: Model Deployment](../07_Deployment)
 
-## Accuracy Benchmarking
+## Evaluate the Accuracy of the Base Model
 
-This step will use lm_eval to run accuracy benchmarking on the base model. The results from benchmarking the base model will be used as a reference/baseline to compare the results of the compressed model.
+Before you compress the base model, use the LMEval tool to run accuracy benchmarking on it. You need to obtain an accuracy benchmark for the base model so that you can compare it with the accuracy of the model after you compress it.
+
+The process of compressing a model can introduce rounding errors that can degrade the accuracy of a model. With accuracy benchmarking, you can confirm that the speed improvements gained from compression do not come at a significant cost to model capabilities, such as reasoning and knowledge.
+
+For details on evaluating LLMs for accuracy, see [Evaluate the Accuracy of the Base and Compressed Models](docs/Accuracy_Evaluation.md).
 
 ### Prerequisites
 
-- Have enough resources for saving and loading a model. E.g., a model having 7 to 8 billion parameters takes around 14GB of memory to load.
+- You completed the [Setup](../00_Setup/00_Setup_README.md) module.
 
 ### Procedure
 
-1. ```text
-    cd ../01_Base_Accuracy_Benchmarking
-
-2. Open the [Base_Accuracy_Benchmarking.ipynb](Base_Accuracy_Benchmarking.ipynb) file in JupyterLab and follow the instructions directly in the notebook. This will give results for the base model.
+* In JupyterLab, open the [Base_Accuracy_Benchmarking.ipynb](Base_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 
-A model should be downlaoded and saved in the `model-serve-flow/base_model/` folder. All cells should run successfully. Results for the base model accuracy should be saved in the `model-serve-flow/results/` folder.
+* The `model-serve-flow/base_model/` folder contains the base model: `RedHatAI/Llama-3.1-8B-Instruct`.
+* The `model-serve-flow/results/` folder contains the results of the accuracy benchmarking for the base model.
 
 ## Next step
 
-Proceed to [Step 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md).
+Proceed to [Module 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md).

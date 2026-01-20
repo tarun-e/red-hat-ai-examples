@@ -1,36 +1,35 @@
-# Step 4: Evaluating Accuracy of the Compressed Model
+# Module 4: Compressed Accuracy Benchmarking
 
 ## Navigation
 
 - [Model Serving Overview](../README.md)
-- [Step 0: 00_Setup](../00_Setup/00_Setup_README.md)
-- [Step 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/01_Base_Accuracy_Benchmarking_README.md)
-- [Step 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
-- [Step 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
-- Step 4: Base Accuracy Benchmarking
-- [Step 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
-- [Step 6: Comparison](../06_Comparison)
-- [Step 7: Model Deployment](../07_Deployment)
+- [Module 0: 00_Setup](../00_Setup/00_Setup_README.md)
+- [Module 1: Base Accuracy Benchmarking](../01_Base_Accuracy_Benchmarking/01_Base_Accuracy_Benchmarking_README.md)
+- [Module 2: Base Performance Benchmarking](../02_Base_Performance_Benchmarking/02_Base_Performance_Benchmarking_README.md)
+- [Module 3: Model Compression](../03_Model_Compression/03_Model_Compression_README.md)
+- Module 4: Base Accuracy Benchmarking
+- [Module 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking/05_Base_Performance_Benchmarking_README.md)
+- [Module 6: Comparison](../06_Comparison/06_Comparison_README.md)
+- [Module 7: Model Deployment](../07_Deployment)
 
-## Accuracy Benchmarking
+## Evaluate the Accuracy of the Compressed Model
 
-This step will use lm_eval to run accuracy benchmarking on the compressed model. The results from benchmarking the compressed model will be compared against the baseline developed by the base model.
+After you compress the model, use the LMEval tool (`lm_eval`) to run accuracy benchmarking on it. Evaluate the compressed model by using the same benchmark datasets and metrics that you used to evaluate the base model in Module 1. This consistency ensures a valid result when you compare the accuracy of the models so that you can quantify the impact of quantization.
+
+For details on evaluating LLMs for accuracy, see [AcEvaluate the Accuracy of the Base and Compressed Models](docs/Accuracy_Evaluation.md).
 
 ### Prerequisites
 
-- The base model has been compressed successfully.
+* You completed the previous modules in the `model-serve-flow` project.
 
 ### Procedure
 
-1. ```text
-    cd ../04_Compressed_Accuracy_Benchmarking
-
-2. Open the [Compressed_Accuracy_Benchmarking.ipynb](Compressed_Accuracy_Benchmarking.ipynb) file in JupyterLab and follow the instructions directly in the notebook. This will give results for the base model.
+* In JupyterLab, open the [Compressed_Accuracy_Benchmarking.ipynb](Compressed_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 
-Results for the compressed model accuracy should be saved in the `model-serve-flow/results/` folder.
+The `model-serve-flow/results/` folder contains the results for the compressed model accuracy benchmarking procedure.
 
 ## Next step
 
-Proceed to [Step 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking_README.md).
+Proceed to [Module 5: Compressed Performance Benchmarking](../05_Compressed_Performance_Benchmarking_README.md).

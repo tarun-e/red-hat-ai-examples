@@ -1,4 +1,4 @@
-## Evaluate Accuracy of the Base and the Compressed Model
+## Evaluate the Accuracy of the Base and Compressed Models
 
 After compression, it is imperative to evaluate the accuracy of the compressed and base models on standard benchmarks to determine how compression affects its accuracy and generative quality relative to the base model.
 
