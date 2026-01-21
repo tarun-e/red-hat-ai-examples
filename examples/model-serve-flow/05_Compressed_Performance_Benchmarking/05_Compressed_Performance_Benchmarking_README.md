@@ -20,16 +20,16 @@ For details on system-level performance benchmarking and GuideLLM, see [Performa
 
 ### Prerequisites
 
-* You completed the previous modules in the `model-serve-flow` project.
+- You completed the previous modules in the `model-serve-flow` project.
 
 ### Procedure
 
-* In JupyterLab, open the [Compressed_Performance_Benchmarking.ipynb](Compressed_Performance_Benchmarking.ipynb) file and follow the instructions in the notebook.
+- In JupyterLab, open the [Compressed_Performance_Benchmarking.ipynb](Compressed_Performance_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 
-* You successfully started the vLLM server and deployed the base model.
-* The `model-serve-flow/results/` folder contains the performance metrics for the compressed model.
+- You successfully started the vLLM server and deployed the base model.
+- The `model-serve-flow/results/` folder contains the performance metrics for the compressed model.
 
 ## Next step
 

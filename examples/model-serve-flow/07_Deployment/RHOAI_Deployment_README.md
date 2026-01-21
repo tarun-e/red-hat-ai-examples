@@ -39,16 +39,16 @@ The following procedure describes how to deploy the compressed model on your Ope
 
     c. Configure the following compute resources:
 
-       * Expand the **Custom resource requests and limits** dropdown.
+    * Expand the **Custom resource requests and limits** dropdown.
 
-       * Set CPU and memory requests and limits based on the model size and expected workload for this example:
+    * Set CPU and memory requests and limits based on the model size and expected workload for this example:
          CPU: Request = 2 Cores, Limit = 2 Cores
          Memory: Request = 4 GiB, Limit = 4 GiB
 
-       * Specify the number of GPUs to allocate for this example:
+    * Specify the number of GPUs to allocate for this example:
          Nvidia GPU: Request =1, Limit =1
 
-    d.  Set the `Serving runtime` to `vLLM NVIDIA GPU ServingRuntime KServe`.
+    * Set the `Serving runtime` to `vLLM NVIDIA GPU ServingRuntime KServe`.
 
     e. Leave the number of replicas as 1.
 
@@ -56,8 +56,7 @@ The following procedure describes how to deploy the compressed model on your Ope
 
     ![Shown here](../assets/03.png)
 
-
-6. Fill out the **Advanced Settings** section:
+5. Fill out the **Advanced Settings** section:
 
     a. For **Model access**, enable `Make model deployment available through an external route`.
 
@@ -67,25 +66,26 @@ The following procedure describes how to deploy the compressed model on your Ope
 
     d. Add the following environment variable:
 
-       Name: `VLLM_LOGGING_LEVEL`
-       Value: `DEBUG`
+    ```text
+    Name: `VLLM_LOGGING_LEVEL`
+    Value: `DEBUG`
+    ```
 
     d. For **Deployment strategy**, select `Rolling update`.
 
     e. Click **Next** and then review the deployment details.
 
-       ![Shown here](../assets/04.png)
+    ![Shown here](../assets/04.png)
 
+6. Click **Deploy Model**.
 
-7. Click **Deploy Model**.
-
-8. Navigate to the **Deployments** tab.
+7. Navigate to the **Deployments** tab.
 
     The model deployment (for example, `llama-31-8b-int8`) initially shows a status of `Starting`.
 
-9. Wait until the status changes to `Started`, indicating that the model is ready to serve requests.
+8. Wait until the status changes to `Started`, indicating that the model is ready to serve requests.
 
-10. Obtain the endpoints and token to interact with the model:
+9. Obtain the endpoints and token to interact with the model:
 
     a. In the **Deployments** tab, locate your model deployment (for example, `llama-31-8b-int8`).
 
@@ -110,7 +110,7 @@ If the deployment status is **Started**, you can verify that the model is servin
     In the upper-right corner of the OpenShift web console, click your user name and select *Copy login command*. After you have logged in, click *Display token*. Copy the *Log in with this token* command and paste it in the {openshift-cli}.
 
     ```text
-    $ oc login --token=__<token>__ --server=__<openshift_cluster_url>__
+    oc login --token=__<token>__ --server=__<openshift_cluster_url>__
     ```
 
 2. Run the following command:
@@ -126,7 +126,6 @@ If the deployment status is **Started**, you can verify that the model is servin
         "temperature": 0.5
       }'
     ```
-
 
 A valid response, such as the following example, confirms that the model is deployed and serving requests.
 
@@ -161,7 +160,7 @@ A valid response, such as the following example, confirms that the model is depl
 }
 ```
 
-###  Use the OpenAI SDK
+### Use the OpenAI SDK
 
 To use the OpenAI Python SDK to test the model deployment, run the following code:
 

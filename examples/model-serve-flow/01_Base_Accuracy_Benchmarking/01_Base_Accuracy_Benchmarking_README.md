@@ -26,12 +26,12 @@ For details on evaluating LLMs for accuracy, see [Evaluate the Accuracy of the B
 
 ### Procedure
 
-* In JupyterLab, open the [Base_Accuracy_Benchmarking.ipynb](Base_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
+- In JupyterLab, open the [Base_Accuracy_Benchmarking.ipynb](Base_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 
-* The `model-serve-flow/base_model/` folder contains the base model: `RedHatAI/Llama-3.1-8B-Instruct`.
-* The `model-serve-flow/results/` folder contains the results of the accuracy benchmarking for the base model.
+- The `model-serve-flow/base_model/` folder contains the base model: `RedHatAI/Llama-3.1-8B-Instruct`.
+- The `model-serve-flow/results/` folder contains the results of the accuracy benchmarking for the base model.
 
 ## Next step
 

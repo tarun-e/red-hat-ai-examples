@@ -20,11 +20,11 @@ For details on evaluating LLMs for accuracy, see [AcEvaluate the Accuracy of the
 
 ### Prerequisites
 
-* You completed the previous modules in the `model-serve-flow` project.
+- You completed the previous modules in the `model-serve-flow` project.
 
 ### Procedure
 
-* In JupyterLab, open the [Compressed_Accuracy_Benchmarking.ipynb](Compressed_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
+- In JupyterLab, open the [Compressed_Accuracy_Benchmarking.ipynb](Compressed_Accuracy_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 

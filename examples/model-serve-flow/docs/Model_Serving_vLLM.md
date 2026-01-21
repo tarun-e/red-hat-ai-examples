@@ -16,7 +16,6 @@ Key Settings for Production Optimization:
 
 --gpu-memory-utilization – Explicitly manages the percentage of GPU memory used for KV caching
 
-
 ### vLLM Configuration for Single-Node and Multi-Node Serving
 
 For single-node, single-GPU or multi-GPU (but not multi-node) vLLM serving, the main arguments are:

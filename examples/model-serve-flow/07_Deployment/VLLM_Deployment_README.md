@@ -4,7 +4,6 @@ You can deploy a compressed model by using a vLLM inference server.
 
 **NOTE:** Alternately, you can deploy the compressed model on a Red Hat OpenShift AI cluster as described in [Deploying the Compressed Large Language Model on Red Hat OpenShift AI](07_Deployment/RHOAI_Deployment_README.md).
 
-
 ## Prerequisites
 
 * You completed the previous modules in the `model-serve-flow` project.

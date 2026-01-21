@@ -22,18 +22,18 @@ For details on system-level performance benchmarking and GuideLLM, see [Performa
 
 ### Prerequisites
 
-* You completed the previous modules in the `model-serve-flow` project.
+- You completed the previous modules in the `model-serve-flow` project.
 
-* The base model (`RedHatAI/Llama-3.1-8B-Instruct`) is in the `model-serve-flow/base_model/` folder.
+- The base model (`RedHatAI/Llama-3.1-8B-Instruct`) is in the `model-serve-flow/base_model/` folder.
 
 ### Procedure
 
-* In JupyterLab, open the [Base_Performance_Benchmarking.ipynb](Base_Performance_Benchmarking.ipynb) file and follow the instructions in the notebook.
+- In JupyterLab, open the [Base_Performance_Benchmarking.ipynb](Base_Performance_Benchmarking.ipynb) file and follow the instructions in the notebook.
 
 ### Verification
 
-* You successfully started the vLLM server and deployed the base model.
-* The `model-serve-flow/results/` folder contains the performance metrics for the base model.
+- You successfully started the vLLM server and deployed the base model.
+- The `model-serve-flow/results/` folder contains the performance metrics for the base model.
 
 ## Next step
 

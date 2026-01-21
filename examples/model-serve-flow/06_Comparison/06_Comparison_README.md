@@ -28,9 +28,8 @@ For your convenience, this module includes two files that summarize the comparis
 
 ### Prerequisites
 
-* You completed the previous modules in the `model-serve-flow` project.
+- You completed the previous modules in the `model-serve-flow` project.
 
 ### Procedure
 
 View a summary of the example results in [Accuracy Comparison of the Compressed and Base Models](Accuracy_Comparison.md) and [Performance Comparison of the Compressed and Base Models](Performance_Comparison.md).
-
