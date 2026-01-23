@@ -1,8 +1,7 @@
 # Fine-tuning pipelines on Red Hat OpenShift AI (RHOAI)
 
-This guided example goes through how to set up the Training Hub's fine-tuning pipeline on Red Hat OpenShift AI.
-
-Our example will go through: dataset download, training on a single node with GPU, evaluation of the fine-tuned model, and registering the model to Model Registry with use of the OSFT algorithm.
+This guided example goes through setting up the Training Hub's fine-tuning pipeline on Red Hat OpenShift AI.
+The pipeline goes through a few steps with the purpose to provide an easy way of dataset download, fine-tuning, evaluation and registering the model.
 
 ## Note
 
@@ -14,24 +13,24 @@ The pipelines are built using modular, reusable KFP components that can be integ
 
 There are four flavours of the pipelines:
 
-- **OSFT** - OSFT pipeline introduces expert level pipeline which provides a huge set of parameters to fine grain OSFT based fine tuning.
-- **OSFT-minimal** - OSFT-minimal pipeline introduces entry level pipeline which can be used to fine tune model with as little as just one required parameter.
-- **SFT** - SFT pipeline introduces expert level pipeline which provides a huge set of parameters to fine grain SFT based fine tuning.
-- **SFT-minimal** - SFT-minimal pipeline introduces entry level pipeline which can be used to fine tune model with as little as just one required parameter.
+- **OSFT** - Expert-level pipeline with extensive parameters for fine-grained control over OSFT-based fine-tuning.
+- **OSFT-minimal** - Entry-level pipeline with a single required parameter for OSFT-based fine-tuning.
+- **SFT** - Expert-level pipeline with extensive parameters for fine-grained control over SFT-based fine-tuning.
+- **SFT-minimal** - Entry-level pipeline with a single required parameter for SFT-based fine-tuning.
 
 Each of the pipelines consists of **four** components:
 
-- **Dataset Download** - Downloads and validates the dataset, ensuring it's in the expected chat format for Training Hub
-- **Fine-Tuning** - Downloads the base model, performs OSFT fine-tuning, and produces training metrics
-- **Evaluation** - Uses LM-Eval harness to evaluate the fine-tuned model against benchmark tasks and produce metrics
-- **Model Registry** - Registers the fine-tuned model to Kubeflow Model Registry (optional)
+- **[Dataset Download](https://github.com/red-hat-data-services/pipelines-components/tree/main/components/data_processing/dataset_download)** - Downloads and validates the dataset, ensuring it's in the format required by the Training Hub. Provides dataset split for training and evaluation components if required.
+- **[Fine-Tuning](https://github.com/red-hat-data-services/pipelines-components/tree/main/components/training/finetuning)** - Downloads the base model, performs fine-tuning, produces training metrics and training loss chart
+- **[Evaluation](https://github.com/red-hat-data-services/pipelines-components/tree/main/components/evaluation/lm_eval)** - Uses LM-Eval harness to evaluate the fine-tuned model against benchmark tasks or evaluation split and produce metrics
+- **[Model Registry](https://github.com/red-hat-data-services/pipelines-components/tree/main/components/deployment/kubeflow_model_registry)** - Registers the fine-tuned model to Kubeflow Model Registry (optional)
 
 > - More algorithms will be included over time
 
 **Pipeline Key Benefits:**
 
-- **Configuration flavors** - For entry level pipeline only one required parameter (dataset URI); sensible defaults for everything else. While expert version contains tens of params to suit fine grained requirements.
-- **End-to-end workflow** - From raw data to registered model in a single pipeline run
+- **Configuration flavors** - For entry level pipeline only one parameter is required (dataset URI); pipeline provides sensible defaults for everything else. While expert version contains tens of params to suit fine grained requirements.
+- **End-to-end workflow** - From raw data to registered fine-tuned model in a single pipeline run
 - **Built-in evaluation** - Automatic benchmarking with LM-Eval harness
 - **Model lineage tracking** - Full provenance recorded in Model Registry (training params, metrics, source pipeline)
 
@@ -49,15 +48,14 @@ Each of the pipelines consists of **four** components:
 
 Currently, the pipeline supports two types of algorithms:
 
-- **OSFT (Orthogonal Subspace Fine-Tuning)** - to find out more about OSFT visit [Training Hubs OSFT documentation](https://github.com/Red-Hat-AI-Innovation-Team/training_hub/blob/v0.5.0/docs/algorithms/osft.md)
-- **SFT (Supervised Fine-Tuning)** - to find out more about SFT visit [Training Hubs SFT documentation](https://github.com/Red-Hat-AI-Innovation-Team/training_hub/blob/v0.5.0/docs/algorithms/sft.md)
+- **OSFT (Orthogonal Subspace Fine-Tuning)** - to find out more about OSFT visit [Training Hub's OSFT documentation](https://github.com/Red-Hat-AI-Innovation-Team/training_hub/blob/v0.5.0/docs/algorithms/osft.md)
+- **SFT (Supervised Fine-Tuning)** - to find out more about SFT visit [Training Hub's SFT documentation](https://github.com/Red-Hat-AI-Innovation-Team/training_hub/blob/v0.5.0/docs/algorithms/sft.md)
 
 ## Hardware requirements to run the example pipeline
 
 ### Training Job Requirements
 
-Generally, the hardware requirements will depend on what the pipeline params are configured to, however, each of the pipelines have default values therefore, the below requirements
-are covering only the default scenarios:
+Hardware requirements will depend on what the pipeline params are configured to (specifically GPU, CPU and memory required) however, each of the pipelines have default values therefore, the below requirements cover only the default scenarios:
 
 | Pipeline flavor | Number of nodes | GPU per node | GPU Type (per GPU) | CPU | Memory |
 | --------------- | --------------- | ------------ | ------------------ | --- | ------ |
@@ -127,17 +125,16 @@ expose every param that underlying components support:
 
 ## Quick Start
 
-As part of quick start OSFT-minimal pipeline was used.
-The only differences between the flavors of pipelines are:
+This quick start guide uses the OSFT-minimal pipeline.
+The only differences in running different flavors of pipelines are:
 
 - parameters
-- hardware requirements
+- default hardware requirements
 
 ### 1. Generate the Pipeline YAML
 
 Before we upload the pipelines to RHOAI platform, we need to ensure that the pipelines are in .yaml format.
-The compiled pipeline YAML is not included in the repository and must be generated locally, reason being is that some values - like the `storage class`, will
-most likely need to be tweaked to the storage class available on cluster.
+The compiled pipeline YAML is not included in the repository and must be generated locally.
 
 **Requirements:**
 
@@ -146,7 +143,7 @@ most likely need to be tweaked to the storage class available on cluster.
 
 ```bash
 # Clone the repository
-git clone https://github.com/kubeflow/pipelines-components.git
+git clone https://github.com/red-hat-data-services/pipelines-components.git
 cd pipelines-components
 
 # Create a virtual environment with the correct KFP version
@@ -253,7 +250,7 @@ The training component is the core of the fine-tuning pipeline. It handles:
 - Monitoring job progress and collecting training metrics
 - Producing loss charts and training artifacts
 
-The component is available as a standalone KFP component that you can import and use in your own pipelines:
+The component is available as a standalone KFP component that can be imported and used in other pipelines:
 
 ```python
 from kfp import dsl
