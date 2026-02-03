@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Test Suite
+    name: Validation & Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,7 +38,7 @@ jobs:
 
       - name: Check test results
         run: |
-          # Fail the workflow if any tests failed
+          # Fail the workflow if any tests failed (excluding validation warnings)
           grep -q "failed" validation-output.txt && exit 1 || true
           grep -q "failed" smoke-output.txt && exit 1 || true
           exit 0
@@ -51,6 +51,8 @@ jobs:
           path: |
             validation-results.xml
             smoke-results.xml
+            validation-output.txt
+            smoke-output.txt
           retention-days: 7
 
       - name: Generate test summary
@@ -60,7 +62,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
           echo "### Validation Tests" >> $GITHUB_STEP_SUMMARY
-          tail -n 1 validation-output.txt >> $GITHUB_STEP_SUMMARY
+          tail -n 20 validation-output.txt | grep -A 20 "Validation Warnings Summary" >> $GITHUB_STEP_SUMMARY || tail -n 1 validation-output.txt >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           echo "### Smoke Tests" >> $GITHUB_STEP_SUMMARY
