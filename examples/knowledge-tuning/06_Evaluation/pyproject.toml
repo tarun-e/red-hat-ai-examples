@@ -5,7 +5,7 @@ description = "A project to evaluate and compare the finetuned and base models"
 requires-python = ">=3.12"
 dependencies = [
     "transformers>=4.57.1",
-    "torch==2.8.0",
+    "torch==2.13.0",
     "accelerate>=1.11.0",
     "rich>=14.2.0",
     "python-dotenv>=1.1.1"
